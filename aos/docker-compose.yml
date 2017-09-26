@@ -1,0 +1,39 @@
+version: '3'
+services:
+  aos_postgres:
+    image: admpresales/aos-postgres:${TAG}
+    ports:
+    - "${POSTGRES_PORT}:5432"
+    container_name: aos_postgres 
+    restart: always
+    networks:
+        - demo-net
+  aos_accountservice:
+    env_file:
+    - .env
+    image: admpresales/aos-accountservice:${TAG}
+    ports:
+    - "${ACCOUNT_PORT}:8080"
+    depends_on:
+    - "aos_postgres"
+    container_name: aos_accountservice 
+    restart: always
+    networks:
+        - demo-net
+  aos_main:
+    env_file:
+    - .env
+    image: admpresales/aos-main-app:${TAG}
+    ports:
+    - "${MAIN_PORT}:8080"
+    depends_on:
+    - "aos_accountservice"
+    container_name: aos_main  
+    restart: always
+    networks:
+        - demo-net
+
+networks:
+   demo-net:
+     external: true
+
