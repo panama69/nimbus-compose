@@ -15,7 +15,7 @@ In order to start them again, run the following command from the same directory.
 
 If you wish to destroy the containers all together, you may run the following from the directory.
 
-``` docker-compose down
+``` docker-compose down ```
 
 For further information about compose, please visit the docker compose page:
 
