@@ -1,11 +1,11 @@
 # nimbus-compose
 A repository to store docker-compose files for Nimbus Docker Images
 
-In order to use a compose file, cd into the appropriate directory and run the following command:
+In order to use a compose file, cd into the appropriate directory and run the command below. You will then see the relevant containers being spun up.
 
 ``` docker-compose up -d ```
 
-You will then see the relevant containers being spun up. In order to stop them run the following command from the same directory.
+In order to stop them, run the following command from the same directory.
 
 ``` docker-compose stop ```
 
