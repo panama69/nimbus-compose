@@ -7,6 +7,7 @@ services:
     ports:
       - "8085:8080"
     container_name: octane
+    hostname: octane.aos.com
     shm_size: 2g
     networks:
       - demo-net
@@ -14,7 +15,7 @@ services:
     image: admpresales/aos-postgres:${AOS_TAG}
     ports:
     - "${POSTGRES_PORT}:5432"
-    container_name: aos_postgres 
+    container_name: aos_postgres
     restart: always
     networks:
         - demo-net
@@ -26,7 +27,7 @@ services:
     - "${ACCOUNT_PORT}:8080"
     depends_on:
     - "aos_postgres"
-    container_name: aos_accountservice 
+    container_name: aos_accountservice
     restart: always
     networks:
         - demo-net
@@ -38,22 +39,27 @@ services:
     - "${MAIN_PORT}:8080"
     depends_on:
     - "aos_accountservice"
-    container_name: aos_main  
+    container_name: aos_main
     restart: always
     networks:
         - demo-net
   devops:
     env_file:
       - .env
-    image: admpresales/devops:${DEVOPS_TAG}
+    image: admpresales/devops-dev:${DEVOPS_TAG}
     depends_on:
         - "octane"
-    command: ["./wait-for-it.sh", "octane:8080", "--", "/startup/start_jenkins.sh"]
+    command: ["/startup/wait-for-it/wait-for-it.sh", "octane:8080", "-t", "90", "--", "/startup/start_jenkins.sh"]
     ports:
       - "8090:8080"
     container_name: devops
     networks:
           - demo-net
+    healthcheck:
+        test: ["CMD", "curl", "-f", "http://localhost:8080"]
+        interval: 40s
+        timeout: 3s
+        retries: 3
 
 networks:
    demo-net:
