@@ -57,10 +57,9 @@ services:
           - demo-net
     healthcheck:
         test: ["CMD", "curl", "-f", "http://localhost:8080"]
-        interval: 40s
+        interval: 20s
         timeout: 3s
-        retries: 3
-
+        retries: 8
 networks:
    demo-net:
      external: true
