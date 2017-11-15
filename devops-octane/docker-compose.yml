@@ -1,0 +1,61 @@
+version: '3'
+services:
+  octane:
+    env_file:
+      - .env
+    image: admpresales/octane:${OCTANE_TAG}
+    ports:
+      - "8085:8080"
+    container_name: octane
+    shm_size: 2g
+    networks:
+      - demo-net
+  aos_postgres:
+    image: admpresales/aos-postgres:${AOS_TAG}
+    ports:
+    - "${POSTGRES_PORT}:5432"
+    container_name: aos_postgres 
+    restart: always
+    networks:
+        - demo-net
+  aos_accountservice:
+    env_file:
+    - .env
+    image: admpresales/aos-accountservice:${AOS_TAG}
+    ports:
+    - "${ACCOUNT_PORT}:8080"
+    depends_on:
+    - "aos_postgres"
+    container_name: aos_accountservice 
+    restart: always
+    networks:
+        - demo-net
+  aos_main:
+    env_file:
+    - .env
+    image: admpresales/aos-main-app:${AOS_TAG}
+    ports:
+    - "${MAIN_PORT}:8080"
+    depends_on:
+    - "aos_accountservice"
+    container_name: aos_main  
+    restart: always
+    networks:
+        - demo-net
+  devops:
+    env_file:
+      - .env
+    image: admpresales/devops:${DEVOPS_TAG}
+    depends_on:
+        - octane:
+          - condition: service_healthy
+    ports:
+      - "8085:8080"
+    container_name: devops
+      networks:
+          - demo-net
+
+networks:
+   demo-net:
+     external: true
+
