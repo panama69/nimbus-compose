@@ -53,10 +53,11 @@ services:
     restart: always
     networks:
         - demo-net
-  test: ["CMD", "curl", "-f", "http://localhost:8080"]
-    interval: 20s
-    timeout: 3s
-    retries: 5
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      interval: 20s
+      timeout: 3s
+      retries: 5
   devops:
     env_file:
       - .env
