@@ -37,10 +37,13 @@ services:
     networks:
         - demo-net
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080"]
+      test: ["CMD", "curl", "-f", "-X", "OPTIONS", "http://localhost:8080/accountservice"]
       interval: 20s
       timeout: 3s
       retries: 5
+    environment:
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
   aos_main:
     env_file:
     - .env
@@ -48,7 +51,7 @@ services:
     ports:
     - "${MAIN_PORT}:8080"
     depends_on:
-    - "aos_accountservice"
+    - "aos_postgres"
     container_name: aos_main
     restart: always
     networks:
@@ -58,6 +61,11 @@ services:
       interval: 20s
       timeout: 3s
       retries: 5
+    extra_hosts:
+      - "nimbusserver:172.50.0.1"
+    environment:
+      http_proxy: ${http_proxy}
+      https_proxy: ${https_proxy}
   devops:
     env_file:
       - .env
@@ -78,4 +86,3 @@ services:
 networks:
    demo-net:
      external: true
-
