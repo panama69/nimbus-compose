@@ -47,8 +47,8 @@ services:
       - .env
     image: admpresales/devops:${DEVOPS_TAG}
     depends_on:
-        - octane:
-          - condition: service_healthy
+        - "octane"
+    command: ["./wait-for-it.sh", "octane:8080", "--", "/startup/start_jenkins.sh"]
     ports:
       - "8090:8080"
     container_name: devops
